@@ -1,4 +1,5 @@
 import React from 'react';
+import 'react-native';
 import LottieView from 'lottie-react-native';
 
 export default class BarterAnimation extends React.Component {

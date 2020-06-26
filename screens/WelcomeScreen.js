@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, Image, TouchableOpacity,TextInput, Alert } from 'react-native';
+import { View, StyleSheet, Text, Image, TouchableOpacity,TextInput, Alert, KeyboardAvoidingView } from 'react-native';
 import BarterAnimation from '../components/barterAnimation.js';
 import db from '../config';
 import firebase from 'firebase';
@@ -43,7 +43,10 @@ export default class WelcomeScreen extends Component {
     return(
       <View style={styles.container}>
         <View style={styles.profileContainer}>
-          <BarterAnimation/>
+        <Image
+        style={{width:150, height: 150, marginBottom: 10}}
+        source={require('../assets/icon-barter.png')}
+      />
           <Text style={styles.title}>iBarter</Text>
           <Text style={{color:'#0031c6'}}> An eTrading Method </Text>
         </View>
@@ -96,7 +99,7 @@ export default class WelcomeScreen extends Component {
 const styles = StyleSheet.create({
   container:{
     flex:1,
-    backgroundColor:'#FFC26D'
+    backgroundColor:'#ffb968'
   },
   profileContainer:{
     flex:1,

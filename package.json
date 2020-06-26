@@ -12,12 +12,17 @@
     "expo": "~38.0.1",
     "expo-status-bar": "^1.0.0",
     "firebase": "^7.15.5",
-    "lottie-react-native": "^3.4.0",
+    "lottie-react-native": "^2.6.1",
+    "prop-types": "^15.7.2",
     "react": "~16.11.0",
     "react-dom": "~16.11.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.0.tar.gz",
     "react-native-gesture-handler": "^1.6.1",
-    "react-native-web": "~0.11.7"
+    "react-native-reanimated": "^1.9.0",
+    "react-native-safe-modules": "^1.0.0",
+    "react-native-screens": "^2.9.0",
+    "react-native-web": "~0.11.7",
+    "yarn": "^1.22.4"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",
