@@ -1,12 +1,17 @@
 {
   "expo": {
     "name": "iBarter",
-    "slug": "iBarter",
+    "slug": "eBarter-exchange",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon-barter.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/splash-barter.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -18,9 +23,6 @@
     ],
     "ios": {
       "supportsTablet": true
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
     }
   }
 }

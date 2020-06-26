@@ -8,11 +8,15 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@firebase/firestore": "^1.15.5",
     "expo": "~38.0.1",
     "expo-status-bar": "^1.0.0",
+    "firebase": "^7.15.5",
+    "lottie-react-native": "^3.4.0",
     "react": "~16.11.0",
     "react-dom": "~16.11.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.0.tar.gz",
+    "react-native-gesture-handler": "^1.6.1",
     "react-native-web": "~0.11.7"
   },
   "devDependencies": {
