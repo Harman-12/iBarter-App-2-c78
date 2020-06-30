@@ -1,22 +1,28 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, Image, TouchableOpacity,TextInput, Alert, KeyboardAvoidingView } from 'react-native';
+import { View, StyleSheet, Text, Image, Modal, TouchableOpacity,TextInput, Alert, KeyboardAvoidingView, ScrollView } from 'react-native';
 import BarterAnimation from '../components/barterAnimation.js';
 import db from '../config';
-import firebase from 'firebase';
+import * as firebase from 'firebase';
 
 export default class WelcomeScreen extends Component {
   constructor(){
     super()
     this.state={
       username : '',
-      password: ''
+      password: '',
+      isModalVisible : false,
+      firstName : "",
+      lastName : "",
+      mobileNumber:"",
+      address : "",
+      confirmPassword : ""
     }
   }
 
   userLogin = (username, password)=>{
     firebase.auth().signInWithEmailAndPassword(username, password)
     .then(()=>{
-      return Alert.alert("Successfull Login")
+      return Alert.alert("Successfully Login")
     })
     .catch((error)=> {
       var errorCode = error.code;
@@ -25,23 +31,151 @@ export default class WelcomeScreen extends Component {
     })
   }
 
-  userSignUp = (username, password) =>{
-    firebase.auth().createUserWithEmailAndPassword(username, password)
-    .then((response)=>{
-      return Alert.alert("User Added Successfully")
-    })
-    .catch(function(error) {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      return Alert.alert(errorMessage)
-    });
+  userSignUp = async(username, password,confirmPassword) =>{
+    if(password !== confirmPassword){
+        return Alert.alert("password doesn't match\nCheck your password.")
+    }else{
+      firebase.auth().createUserWithEmailAndPassword(username, password)
+      .then((response)=>{
+        db.collection("users").add({
+          first_name: this.state.firstName,
+          last_name: this.state.lastName,
+          mobile_number: this.state.mobileNumber,
+          username: this.state.username,
+          address: this.state.address
+        })
+        return  Alert.alert(
+             'User Added Successfully',
+             '',
+             [
+               {text: 'OK', onPress: () => this.setState({"isModalVisible" : false})},
+             ]
+         );
+      })
+      .catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        return Alert.alert(errorMessage)
+      });
+    }
+
   }
+
+  showModal = ()=>(
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={this.state.isModalVisible}
+      >
+      <View style={styles.modalContainer}>
+        <ScrollView style={{width:'100%'}}>
+          <KeyboardAvoidingView style={{flex:1,justifyContent:'center', alignItems:'center'}}>
+          <Text
+            style={{justifyContent:'center', alignSelf:'center', fontSize:30,color:'#ff5722',margin:50}}
+            >Registration</Text>
+          <TextInput
+            style={styles.formTextInput}
+            placeholder ={"First Name"}
+            maxLength ={8}
+            onChangeText={(text)=>{
+              this.setState({
+                firstName: text
+              })
+            }}
+          />
+          <TextInput
+            style={styles.formTextInput}
+            placeholder ={"Last Name"}
+            maxLength ={8}
+            onChangeText={(text)=>{
+              this.setState({
+                lastName: text
+              })
+            }}
+          />
+          <TextInput
+            style={styles.formTextInput}
+            placeholder ={"Mobile Number"}
+            maxLength ={10}
+            keyboardType={'numeric'}
+            onChangeText={(text)=>{
+              this.setState({
+                mobileNumber: text
+              })
+            }}
+          />
+          <TextInput
+            style={styles.formTextInput}
+            placeholder ={"Address"}
+            multiline = {true}
+            onChangeText={(text)=>{
+              this.setState({
+                address: text
+              })
+            }}
+          />
+          <TextInput
+            style={styles.formTextInput}
+            placeholder ={"Username"}
+            keyboardType ={'email-address'}
+            onChangeText={(text)=>{
+              this.setState({
+                username: text
+              })
+            }}
+          /><TextInput
+            style={styles.formTextInput}
+            placeholder ={"Password"}
+            secureTextEntry = {true}
+            onChangeText={(text)=>{
+              this.setState({
+                password: text
+              })
+            }}
+          /><TextInput
+            style={styles.formTextInput}
+            placeholder ={"Confirm Password"}
+            secureTextEntry = {true}
+            onChangeText={(text)=>{
+              this.setState({
+                confirmPassword: text
+              })
+            }}
+          />
+          <View style={styles.modalBackButton}>
+            <TouchableOpacity
+              style={styles.registerButton}
+              onPress={()=>
+                this.userSignUp(this.state.username, this.state.password, this.state.confirmPassword)
+              }
+            >
+            <Text style={styles.registerButtonText}>Register</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.modalBackButton}>
+            <TouchableOpacity
+              style={styles.cancelButton}
+              onPress={()=>this.setState({"isVisible":false})}
+            >
+            <Text style={{color:'#ff5722'}}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+          </KeyboardAvoidingView>
+        </ScrollView>
+      </View>
+    </Modal>
+  )
 
 
   render(){
     return(
       <View style={styles.container}>
+        <View style={{justifyContent:'center',alignItems:'center'}}>
+          {
+            this.showModal()
+          }
+        </View>
         <View style={styles.profileContainer}>
         <Image
         style={{width:150, height: 150, marginBottom: 10}}
@@ -84,7 +218,9 @@ export default class WelcomeScreen extends Component {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.button}
-              onPress={()=>{this.userSignUp(this.state.username, this.state.password)}}
+              onPress={()=>{
+                this.setState({"isModalVisible":true})
+              }}
               >
               <Text style={{color:'#ff6e00', fontSize:18, fontWeight:'bold'}}>SIGN UP</Text>
             </TouchableOpacity>
@@ -132,5 +268,47 @@ const styles = StyleSheet.create({
   },
   buttonContainer:{
     flex:1,
-  }
+  },
+  modalContainer:{
+    flex:1,
+    borderRadius:20,
+    justifyContent:'center',
+    alignItems:'center',
+    backgroundColor:"#ffff",
+    marginRight:30,
+    marginLeft : 30,
+    marginTop:80,
+    marginBottom:80,
+  },
+  formTextInput:{
+    width:"75%",
+    height:35,
+    alignSelf:'center',
+    borderColor:'#ffab91',
+    borderRadius:10,
+    borderWidth:1,
+    marginTop:20,
+    padding:10
+  },
+  registerButton:{
+    width:200,
+    height:40,
+    alignItems:'center',
+    justifyContent:'center',
+    borderWidth:1,
+    borderRadius:10,
+    marginTop:30
+  },
+  registerButtonText:{
+    color:'#ff5722',
+    fontSize:15,
+    fontWeight:'bold'
+  },
+  cancelButton:{
+    width:200,
+    height:30,
+    justifyContent:'center',
+    alignItems:'center',
+    marginTop:5,
+  },
 })
